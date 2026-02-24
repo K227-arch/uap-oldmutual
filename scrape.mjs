@@ -120,6 +120,40 @@ async function downloadFile(fileUrl, outputPath) {
   const footerEndRegex = /<\/footer>[\s\S]*?(?=<\/body>|$)/i;
   html = html.replace(footerEndRegex, '</footer>\n');
   
+  // Add fixed navbar and help text CSS
+  const fixedNavbarCSS = `
+  <style>
+    /* Fixed help text bar at the very top - only the click-to-call component */
+    om-click-to-call {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      z-index: 10000 !important;
+      width: 100% !important;
+      background: #fff !important;
+    }
+    
+    /* Fixed navbar below the help text */
+    om-main-navigation {
+      position: fixed !important;
+      top: 40px !important;
+      left: 0 !important;
+      right: 0 !important;
+      z-index: 9999 !important;
+      width: 100% !important;
+      background: inherit !important;
+    }
+    
+    /* Add padding to body to prevent content from hiding under fixed elements */
+    body {
+      padding-top: 120px !important;
+    }
+  </style>
+  `;
+  
+  html = html.replace('</head>', `${fixedNavbarCSS}</head>`);
+  
   fs.writeFileSync(path.join(outputDir, 'index.html'), html);
 
   // screenshot
